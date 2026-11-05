@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: repoguard-insecure-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: repoguard-demo
+  template:
+    metadata:
+      labels:
+        app: repoguard-demo
+    spec:
+      containers:
+        - name: demo
+          image: nginx:latest
+          securityContext:
+            privileged: true
+            runAsUser: 0
+            allowPrivilegeEscalation: true
+          volumeMounts:
+            - name: host-data
+              mountPath: /host
+      volumes:
+        - name: host-data
+          hostPath:
+            path: /
+            type: Directory
